@@ -1,0 +1,3 @@
+mini_tortoise_tts @ git+https://github.com/ghalrym/mini-tortoise-tts.git@main
+python-dotenv == 1.0.1
+
