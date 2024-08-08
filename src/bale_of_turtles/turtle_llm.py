@@ -10,3 +10,6 @@ class TurtleLLM:
 
     def invoke(self):
         raise NotImplementedError()
+
+    def __call__(self):
+        return self.invoke()

@@ -1,5 +1,5 @@
 [project]
-name="turtle-agents"
+name="bale_of_turtles"
 version="1.0"
 requires-python = ">=3.8"
 authors = [
