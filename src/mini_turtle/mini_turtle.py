@@ -1,4 +1,4 @@
-from mini_turtle.components.mini_turtle_component import MiniTurtleComponent, GlobalComponentState
+from .components.mini_turtle_component import MiniTurtleComponent, GlobalComponentState
 
 
 class MiniTurtle(MiniTurtleComponent):

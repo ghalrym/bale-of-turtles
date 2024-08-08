@@ -1,0 +1,25 @@
+[project]
+name="mini-turtle"
+version="1.0"
+requires-python = ">=3.8"
+authors = [
+    {name="Andrew Reed", email="andrewreed2017@icloud.com"}
+]
+maintainers = [
+    {name="Andrew Reed", email="andrewreed2017@icloud.com"}
+]
+readme = {file = "README.md", content-type = "text/markdown"}
+dependencies=[
+    "mini_tortoise_tts @ git+https://github.com/ghalrym/mini-tortoise-tts.git@main",
+    "git_llama @ git+https://github.com/ghalrym/git-llama@main",
+    "python-dotenv == 1.0.1"
+]
+
+[project.optional-dependencies]
+testing = ["pytest"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"*" = ["*.*"]

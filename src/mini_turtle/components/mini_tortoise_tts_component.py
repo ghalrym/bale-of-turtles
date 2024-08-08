@@ -1,6 +1,6 @@
 from mini_tortoise_tts import TextToSpeech, safe_load_voice
 
-from mini_turtle.components.mini_turtle_component import use_state, MiniTurtleComponent
+from .mini_turtle_component import use_state, MiniTurtleComponent
 
 
 class MiniTortoiseTTSComponent(MiniTurtleComponent):
