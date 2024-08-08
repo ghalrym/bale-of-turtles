@@ -1,1 +1,2 @@
-from mini_turtle.components.mini_tortoise_tts_component import MiniTortoiseTTS
+from mini_turtle.components.mini_tortoise_tts_component import MiniTortoiseTTSComponent
+from mini_turtle.components.git_llama import GitLlamaComponent

@@ -3,7 +3,7 @@ from mini_tortoise_tts import TextToSpeech, safe_load_voice
 from mini_turtle.components.mini_turtle_component import use_state, MiniTurtleComponent
 
 
-class MiniTortoiseTTS(MiniTurtleComponent):
+class MiniTortoiseTTSComponent(MiniTurtleComponent):
 
     def __init__(self, voice: str):
         super().__init__()
@@ -12,4 +12,3 @@ class MiniTortoiseTTS(MiniTurtleComponent):
     @use_state("mini-tortoise-tts-say", ["mini_tortoise_tts_say"])
     def say(self, mini_tortoise_tts_say: str):
         audio = self.tts.generate(mini_tortoise_tts_say)
-        print("Will say:", audio)

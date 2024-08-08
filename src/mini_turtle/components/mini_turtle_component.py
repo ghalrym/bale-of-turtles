@@ -1,8 +1,12 @@
 import inspect
 from collections import defaultdict
-from typing import Callable, Any, cast
+from typing import Callable, Any, cast, TypedDict
 
-from typedict import TypeDict
+
+class StateComponent(TypedDict):
+    key: str
+    fn: Callable[[Any, ...], Any]
+    update_on: list[str]
 
 
 class GlobalComponentState:
@@ -16,15 +20,15 @@ class GlobalComponentState:
         cls._ARG_VALUES[key] = value
 
     @classmethod
-    def _trigger_update(cls, key: str):
-        cls._KEY_TO_FN[key](*[cls._ARG_VALUES[arg] for arg in cls._KEY_TO_ARGS[key]])
-
-    @classmethod
     def add_observer(cls, key: str, fn: Callable[[Any, ...], Any], update_on: list[str]) -> None:
         cls._KEY_TO_FN[key] = fn
         cls._KEY_TO_ARGS[key] = [arg.name for arg in inspect.signature(fn).parameters.values()]
         for arg in update_on:
             cls._ARG_TO_FN[arg] = key
+
+    @classmethod
+    def trigger(cls, key: str):
+        cls._KEY_TO_FN[key](*[cls._ARG_VALUES[arg] for arg in cls._KEY_TO_ARGS[key]])
 
     @classmethod
     def update_state(cls, **kwargs):
@@ -34,7 +38,7 @@ class GlobalComponentState:
             if k in cls._ARG_TO_FN:
                 update_functions.add(cls._ARG_TO_FN[k])
         for fn in update_functions:
-            cls._trigger_update(fn)
+            cls.trigger(fn)
 
 
 def use_state(state_id: str, update_on: list[str] | None = None) -> Callable:
@@ -46,9 +50,12 @@ def use_state(state_id: str, update_on: list[str] | None = None) -> Callable:
     return inner
 
 
-class StateComponent(TypeDict):
-    fn_name: str
-    update_on: list[str]
+def use_trigger(trigger_id: str) -> Callable:
+    def inner(fn: Callable):
+        fn.__state_trigger = trigger_id
+        return fn
+
+    return inner
 
 
 class MiniTurtleComponent:
@@ -56,31 +63,45 @@ class MiniTurtleComponent:
     def __init__(self):
         self.state = GlobalComponentState()
         self.has_input = False
-        for class_state_component in self._state_methods():
-            GlobalComponentState.add_observer(
-                class_state_component["fn_name"],
-                getattr(self, class_state_component["fn_name"]),
-                class_state_component["update_on"],
-            )
+        for class_state_component in [*self._state_methods(), *self._trigger_methods()]:
+            GlobalComponentState.add_observer(**class_state_component)
 
     def _state_methods(self) -> list[StateComponent]:
         return [
             cast(
                 StateComponent,
-                {"fn_name": fn_name, "update_on": getattr(fn, '__state_update_on', args)}
+                {
+                    "key": getattr(fn, '__state_observer'),
+                    "fn": fn,
+                    "update_on": getattr(fn, '__state_update_on', args)
+                }
             )
             for fn_name, fn in inspect.getmembers(self, inspect.ismethod)
             if hasattr(fn, '__state_observer')
             if (args := [arg.name for arg in inspect.signature(fn).parameters.values()])
         ]
 
+    def _trigger_methods(self) -> list[StateComponent]:
+        return [
+            cast(
+                StateComponent,
+                {
+                    "key": getattr(fn, '__state_trigger'),
+                    "fn": fn,
+                    "update_on": []
+                }
+            )
+            for fn_name, fn in inspect.getmembers(self, inspect.ismethod)
+            if hasattr(fn, '__state_trigger')
+        ]
+
     def state_help(self):
         return (
             f"==== {self.__class__.__name__} ====\n"
             "\n".join(
-                f"{i + 1}. {component.fn_name} (Updates on: {update_args})"
+                f"{i + 1}. {component['key']} (Updates on: {update_args})"
                 for i, component in enumerate(self._state_methods())
-                if (update_args := ", ".join(component.update_on))
+                if (update_args := ", ".join(component['update_on']))
             )
         )
 
