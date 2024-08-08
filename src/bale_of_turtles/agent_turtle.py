@@ -20,8 +20,6 @@ class AgentTurtle(TurtleTool):
             self.register(_TurtleStateManager())
 
     def register(self, state: _TurtleStateManager):
-        if state is None:
-            state = _TurtleStateManager()
         super().register(state)
 
         class LlmFacade:
@@ -30,8 +28,9 @@ class AgentTurtle(TurtleTool):
                 return self._llm.invoke()
 
         self._state.register_tool(self)
-        self._state.register_tool(self._llm)
         self._state.register_tool(LlmFacade())
+        for tool in self.turtle_tools:
+            tool.register(self._state)
 
     def world_input(self, **kwargs):
         self.state.update_state(**kwargs)
