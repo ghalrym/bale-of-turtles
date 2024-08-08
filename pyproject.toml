@@ -1,5 +1,5 @@
 [project]
-name="mini-turtle"
+name="turtle-agents"
 version="1.0"
 requires-python = ">=3.8"
 authors = [
@@ -10,9 +10,7 @@ maintainers = [
 ]
 readme = {file = "README.md", content-type = "text/markdown"}
 dependencies=[
-    "mini_tortoise_tts @ git+https://github.com/ghalrym/mini-tortoise-tts.git@main",
-    "git_llama @ git+https://github.com/ghalrym/git-llama@main",
-    "python-dotenv == 1.0.1"
+    "pydantic"
 ]
 
 [project.optional-dependencies]
