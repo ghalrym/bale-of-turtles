@@ -55,6 +55,7 @@ class MiniTurtleComponent:
 
     def __init__(self):
         self.state = GlobalComponentState()
+        self.has_input = False
         for class_state_component in self._state_methods():
             GlobalComponentState.add_observer(
                 class_state_component["fn_name"],
@@ -82,3 +83,6 @@ class MiniTurtleComponent:
                 if (update_args := ", ".join(component.update_on))
             )
         )
+
+    def input(self, **kwargs):
+        raise NotImplementedError()

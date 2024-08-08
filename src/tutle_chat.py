@@ -13,7 +13,7 @@ class TurtleChat(MiniTurtle):
         )
 
     def input(self, text: str, *args, **kwargs):
-        self._state.update_state(mini_tortoise_tts_say=text)
+        self.state.update_state(mini_tortoise_tts_say=text)
 
 
 if __name__ == '__main__':
