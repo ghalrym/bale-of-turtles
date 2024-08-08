@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic.v1 import BaseModel
 
 from ._turtle_state import _TurtleStateManager
 
@@ -38,3 +38,9 @@ class TurtleTool:
 
     def __call__(self):
         return self.invoke()
+
+    def trigger(self, key: str):
+        self.state.trigger(key)
+
+    def update_state(self, **kwargs):
+        self.state.update_state(**kwargs)
