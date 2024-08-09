@@ -12,6 +12,12 @@ class DuplicateTurtleFunctionKey(Exception):
         super().__init__(f"Duplicate key found in use state, {key}")
 
 
+class MissingProxyKey(Exception):
+
+    def __init__(self, key):
+        super().__init__(f"Missing key in state, {key}")
+
+
 class _TurtleStateManager:
     __slots__ = (
         "_trigger_queue",
@@ -36,6 +42,11 @@ class _TurtleStateManager:
                 dict.fromkeys(self._trigger_queue + self._state_to_trigger_key[key])
             )
         self.invoke()
+
+    def create_proxy(self, proxy_key: str, key: str):
+        if not (fn_keys := self._state_to_trigger_key.get(key, [])):
+            raise MissingProxyKey(key)
+        self._state_to_trigger_key[proxy_key] = fn_keys
 
     def trigger(self, trigger_key):
         trigger = self._trigger_key_to_functions.get(trigger_key, None)
@@ -84,3 +95,4 @@ def use_state(
 
 def use_trigger(key: str):
     return use_state(key, [])
+
