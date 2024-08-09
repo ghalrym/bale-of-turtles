@@ -10,5 +10,5 @@ class LlmTurtle:
     def invoke(self, *args):
         raise NotImplementedError()
 
-    def __call__(self):
-        return self.invoke()
+    def __call__(self, *args):
+        return self.invoke(args)

@@ -1,6 +1,6 @@
 from ._turtle_state import _TurtleStateManager, use_trigger
 from .turtle_llm import LlmTurtle
-from .turtle_tool import TurtleTool
+from .tool_turtle import TurtleTool
 
 
 class AgentTurtle(TurtleTool):
