@@ -1,8 +1,12 @@
+import logging
+
 from langchain_community.chat_models import ChatOllama
 from langchain_core.messages import BaseMessage
 
 from bale_of_turtles._turtle_state import use_state
 from bale_of_turtles.llm_turtle.llm_turtle import LlmTurtle
+
+logger = logging.getLogger(__name__)
 
 
 class LlamaTurtle(LlmTurtle):
@@ -22,5 +26,7 @@ class LlamaTurtle(LlmTurtle):
     ):
         if not turtle_human_message:
             return
+        logger.info(f"User: {turtle_llm_message_history[-1].content}")
         response = self._model.invoke(turtle_llm_message_history)
+        logger.info(f"Llama: {response.content}")
         self.update_state(turtle_ai_message=response)

@@ -32,11 +32,9 @@ class _TurtleStateManager:
         self._state: dict[str, Any] = defaultdict(lambda: None)
         self._state_to_trigger_key: dict[str, list[str]] = defaultdict(list)
 
-    def get_state(self, key: str, default_value: Any = None) -> Any:
-        return self._state.get(key, default_value)
-
     def update_state(self, **kwargs):
         for key, value in kwargs.items():
+            logger.info("Updating state for %s to %s", key, str(value))
             self._state[key] = value
             self._trigger_queue = list(
                 dict.fromkeys(self._trigger_queue + self._state_to_trigger_key[key])
@@ -60,6 +58,8 @@ class _TurtleStateManager:
             if not (key := getattr(function, "__turtle__", None)):
                 continue
 
+            logger.info("Registering tool: %s (%s)", key, function_name)
+
             # If the key already exists raise error
             if key in self._trigger_key_to_functions:
                 raise DuplicateTurtleFunctionKey(key)
@@ -73,6 +73,11 @@ class _TurtleStateManager:
 
     def invoke(self):
         while len(self._trigger_queue) > 0:
+            logger.info(
+                "Invoking %s (remaining queue = %s)",
+                self._trigger_queue[-1],
+                str(self._trigger_queue),
+            )
             trigger = self._trigger_queue.pop(0)
             self.trigger(trigger)
 
@@ -95,4 +100,3 @@ def use_state(
 
 def use_trigger(key: str):
     return use_state(key, [])
-
