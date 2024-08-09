@@ -1,8 +1,7 @@
 import pytest
 
-from agent_turtle import TurtleTool, use_state
-from agent_turtle._turtle_state import _TurtleStateManager
-from agent_turtle.turtle_tool import UnregisteredTurtleEquipment
+from bale_of_turtles import TurtleTool, use_state, UnregisteredTurtleEquipment
+from bale_of_turtles._turtle_state import _TurtleStateManager
 
 
 class TestTurtleTool(TurtleTool):
@@ -12,7 +11,7 @@ class TestTurtleTool(TurtleTool):
         self.last_text = None
         self.last_volume = None
 
-    @use_state("say", update_on=["volume"])
+    @use_state("turtle-tool", update_on=["volume"])
     def say_quietly(self, text: str | None, volume: int):
         self.last_text = text
         self.last_volume = volume
@@ -37,7 +36,6 @@ def test_invoke():
     test_component = TestTurtleTool()
     with pytest.raises(Exception):
         test_component.invoke()
-        test_component()
 
 
 def test_unregistered_turtle():

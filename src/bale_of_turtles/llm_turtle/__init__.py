@@ -1,1 +1,2 @@
-from bale_of_turtles.turtle_llm.llm_turtle import LlmTurtle
+from .llm_turtle import LlmTurtle
+from .llama_turtle import LlamaTurtle

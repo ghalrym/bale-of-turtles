@@ -33,14 +33,9 @@ class TurtleTool:
         self._state = state
         self._state.register_tool(self)
 
-    def invoke(self):
-        ...
-
-    def __call__(self):
-        return self.invoke()
-
     def trigger(self, key: str):
         self.state.trigger(key)
 
     def update_state(self, **kwargs):
         self.state.update_state(**kwargs)
+
