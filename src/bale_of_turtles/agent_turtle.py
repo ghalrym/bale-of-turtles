@@ -1,5 +1,5 @@
 from ._turtle_state import _TurtleStateManager, use_trigger
-from .turtle_llm import TurtleLLM
+from .turtle_llm import LlmTurtle
 from .turtle_tool import TurtleTool
 
 
@@ -8,7 +8,7 @@ class AgentTurtle(TurtleTool):
 
     def __init__(
         self,
-        llm: TurtleLLM,
+        llm: LlmTurtle,
         *turtle_tools: TurtleTool,
         independent_state: bool = False,
         lead_turtle: bool = False,

@@ -1,14 +1,13 @@
-from ._turtle_state import _TurtleStateManager
+from bale_of_turtles._turtle_state import _TurtleStateManager
 
 
-class TurtleLLM:
+class LlmTurtle:
 
-    def __init__(self, model: str, name: str):
-        self._model = model
+    def __init__(self, name: str):
         self.name = name
         self.state = _TurtleStateManager()
 
-    def invoke(self):
+    def invoke(self, *args):
         raise NotImplementedError()
 
     def __call__(self):
