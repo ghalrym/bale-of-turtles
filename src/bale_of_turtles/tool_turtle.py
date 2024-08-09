@@ -38,4 +38,3 @@ class TurtleTool:
 
     def update_state(self, **kwargs):
         self.state.update_state(**kwargs)
-

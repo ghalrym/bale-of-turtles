@@ -1,5 +1,4 @@
-from ._turtle_state import _TurtleStateManager, use_trigger
-from bale_of_turtles.llm_turtle import LlmTurtle
+from ._turtle_state import _TurtleStateManager
 from .tool_turtle import TurtleTool
 
 
