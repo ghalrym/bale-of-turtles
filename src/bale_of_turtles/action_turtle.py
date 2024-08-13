@@ -19,6 +19,7 @@ class ActionTurtle(TurtleTool):
 
     def register(self, state: _TurtleStateManager):
         self._thread = Thread(target=self.invoke)
+        self._thread.start()
 
     def invoke(self):
         ...
