@@ -91,9 +91,16 @@ def use_state(
 
     # noinspection PyProtectedMember
     def inner(fn: Callable[..., Any]) -> Callable[..., Any]:
-        setattr(fn, "__turtle__", key)
-        setattr(fn, "__turtle_update_on__", update_on)
-        return fn
+        try:
+            setattr(fn, "__turtle__", key)
+            setattr(fn, "__turtle_update_on__", update_on)
+            return fn
+        except AttributeError:
+            def wrapper(self, *args, **kwargs):
+                return fn(self, *args, **kwargs)
+            setattr(wrapper, "__turtle__", key)
+            setattr(wrapper, "__turtle_update_on__", update_on)
+            return wrapper
 
     return inner
 
