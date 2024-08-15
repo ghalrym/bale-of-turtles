@@ -18,6 +18,17 @@ class MissingProxyKey(Exception):
         super().__init__(f"Missing key in state, {key}")
 
 
+class TurtleStateMethod:
+
+    def __init__(self, function: Callable[..., Any], key: str, update_on: list[str]):
+        self._function = function
+        self.__turtle__ = key
+        self.__turtle_update_on__ = update_on
+
+    def __call__(self, *args, **kwargs):
+        return self._function(*args, **kwargs)
+
+
 class _TurtleStateManager:
     __slots__ = (
         "_trigger_queue",
@@ -54,7 +65,9 @@ class _TurtleStateManager:
             trigger(**self._state)
 
     def register_tool(self, obj: object) -> None:
-        for function_name, function in inspect.getmembers(obj, inspect.ismethod):
+        for function_name, function in inspect.getmembers(
+            obj, lambda f: isinstance(f, TurtleStateMethod) | inspect.ismethod(f)
+        ):
             if not (key := getattr(function, "__turtle__", None)):
                 continue
 
@@ -96,12 +109,7 @@ def use_state(
             setattr(fn, "__turtle_update_on__", update_on)
             return fn
         except AttributeError:
-            def wrapper(self, *args, **kwargs):
-                return fn(self, *args, **kwargs)
-            setattr(wrapper, "__turtle__", key)
-            setattr(wrapper, "__turtle_update_on__", update_on)
-            return wrapper
-
+            return TurtleStateMethod(fn, key, update_on)
     return inner
 
 
