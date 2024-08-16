@@ -1,3 +1,5 @@
+from typing import Any
+
 from pydantic.v1 import BaseModel
 
 from ._turtle_state import _TurtleStateManager
@@ -33,8 +35,12 @@ class TurtleTool:
         self._state = state
         self._state.register_tool(self)
 
-    def trigger(self, key: str):
+    def trigger(self, key: str) -> dict[str, Any]:
         self.state.trigger(key)
+        # noinspection PyProtectedMember
+        return self.state._state
 
-    def update_state(self, **kwargs):
+    def update_state(self, **kwargs) -> dict[str, Any]:
         self.state.update_state(**kwargs)
+        # noinspection PyProtectedMember
+        return self.state._state
